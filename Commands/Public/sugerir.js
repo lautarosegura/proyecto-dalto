@@ -67,7 +67,7 @@ module.exports = {
 
 			const confirmationEmbed = new EmbedBuilder()
 				.setDescription('¡Sugerencia enviada correctamente!.')
-				.setColor('GREEN');
+				.setColor('Green');
 
 			const row = new MessageActionRow();
 			row.addComponents(
@@ -87,7 +87,7 @@ module.exports = {
 		} catch (err) {
 			console.log(err);
 			const errorEmbed = new EmbedBuilder()
-				.setColor('RED')
+				.setColor('Red')
 				.setDescription('Ha ocurrido un error. Contacta con un administrador.');
 			interaction.reply({ embeds: [errorEmbed] });
 		}
