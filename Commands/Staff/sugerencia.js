@@ -90,8 +90,9 @@ module.exports = {
 			process.env.SUGGESTIONS_CHANNEL
 		);
 		const suggestionMessage = suggestionChannel.messages.fetch(messageId);
+		console.log(suggestionMessage.embeds);
 		const data = suggestionMessage.embeds[0];
-
+		console.log(data);
 		const channel = client.channels.cache.get(
 			process.env.SUGGESTIONS_UPDATE_CHANNEL
 		);
