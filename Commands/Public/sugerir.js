@@ -69,7 +69,7 @@ module.exports = {
 				.setDescription('¡Sugerencia enviada correctamente!.')
 				.setColor('Green');
 
-			const row = new MessageActionRow();
+			const row = new ActionRowBuilder();
 			row.addComponents(
 				new ButtonBuilder()
 					.setURL(
