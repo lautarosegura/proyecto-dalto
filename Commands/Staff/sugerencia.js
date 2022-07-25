@@ -138,7 +138,7 @@ module.exports = {
 				const notifyAcceptEmbed = new EmbedBuilder()
 					.setAuthor({
 						name: `Sugerencia aceptada`,
-						iconURL: `https://postimg.cc/4HcNgf7d`,
+						iconURL: `https://i.postimg.cc/prG9KyPD/2942-Check.png`,
 					})
 					.setColor('Green')
 					.setTitle(data.title)
