@@ -240,12 +240,12 @@ function generateBanModal(target) {
 		.setLabel('¿Cuántos días de mensajes deseas borrar?')
 		.setPlaceholder('24 horas, 7 dias, cero')
 		.setRequired(true)
-		.setStyle('SHORT');
+		.setStyle('Short');
 
 	const banReason = new TextInputBuilder()
 		.setCustomId('ban-reason')
 		.setLabel('¿Por qué estás baneando al usuario? Introduce una razón.')
-		.setStyle('PARAGRAPH')
+		.setStyle('Paragraph')
 		.setRequired(false);
 
 	banModal.addComponents(
@@ -264,7 +264,7 @@ function generateKickModal(target) {
 	const kickReason = new TextInputBuilder()
 		.setCustomId('kick-reason')
 		.setLabel('¿Por qué estás expulsando al usuario? Introduce una razón.')
-		.setStyle('PARAGRAPH')
+		.setStyle('Paragraph')
 		.setRequired(false);
 
 	kickModal.addComponents(new ActionRowBuilder().addComponents(kickReason));
@@ -282,12 +282,12 @@ function generateTimeoutModal(target) {
 		.setLabel('Ingresa una duración.')
 		.setPlaceholder('1m, 1h, 1d')
 		.setRequired(true)
-		.setStyle('SHORT');
+		.setStyle('Short');
 
 	const timeoutReason = new TextInputBuilder()
 		.setCustomId('timeout-reason')
 		.setLabel('¿Por qué estás aislando al usuario? Introduce una razón.')
-		.setStyle('PARAGRAPH')
+		.setStyle('Paragraph')
 		.setRequired(false);
 
 	timeoutModal.addComponents(
