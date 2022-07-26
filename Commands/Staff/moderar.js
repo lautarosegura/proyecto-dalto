@@ -130,10 +130,10 @@ function handleBanModal(interaction, banModal, target) {
 								name: `${target.user.tag}`,
 								iconURL: `${target.displayAvatarURL({ dynamic: true })}`,
 							})
-							.setFooter({
-								name: `Baneado por ${res.user.tag}`,
-								iconURL: `${res.user.displayAvatarURL({ dynamic: true })}`,
-							})
+							// .setFooter({
+							// 	name: `Baneado por ${res.user.tag}`,
+							// 	iconURL: `${res.user.displayAvatarURL({ dynamic: true })}`,
+							// })
 							.setDescription(`${target} (\`${target.user.tag}\`) fue baneado.`)
 							.addFields([
 								{
@@ -167,11 +167,11 @@ function generateMessage(target, guild) {
 		.setAuthor({
 			name: `${target.user.tag}`,
 			iconURL: `${target.user.displayAvatarURL({ dynamic: true })}`,
-		})
-		.setFooter({
-			name: `${guild.name}`,
-			iconURL: `${guild.iconURL({ dynamic: true })}`,
 		});
+	// .setFooter({
+	// 	name: `${guild.name}`,
+	// 	iconURL: `${guild.iconURL({ dynamic: true })}`,
+	// });
 
 	return {
 		embeds: [embed],
