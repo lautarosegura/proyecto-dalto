@@ -242,8 +242,8 @@ module.exports = {
 						{ name: 'Comentario adicional', value: comment, inline: true }
 					);
 				await suggestionMessage.edit({ embeds: [implementedEmbed] });
-				embed.setColor('GREEN').setDescription(`¡Implementación anunciada!`);
-				interaction.reply({ embeds: [Embed], ephemeral: true });
+				embed.setColor('Green').setDescription(`¡Implementación anunciada!`);
+				interaction.reply({ embeds: [embed], ephemeral: true });
 
 				const notifyImplementedEmbed = new EmbedBuilder()
 					.setAuthor({
