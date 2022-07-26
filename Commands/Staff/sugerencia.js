@@ -81,7 +81,7 @@ module.exports = {
 	async execute(interaction, client) {
 		const { options, guild } = interaction;
 		const messageId = options.getString('id');
-		const reason = options.getString('reason') || 'Sin especificar.';
+		const reason = options.getString('razon') || 'Sin especificar.';
 		const comment =
 			options.getString('comentario') || 'Sin información adicional.';
 		const embed = new EmbedBuilder();

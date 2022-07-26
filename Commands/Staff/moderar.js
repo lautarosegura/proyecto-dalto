@@ -127,7 +127,7 @@ function handleBanModal(interaction, banModal, target) {
 							.setColor('DarkButNotBlack')
 							.setTitle('Nuevo ban')
 							.setAuthor({
-								name: target.user.tag,
+								name: `${target.user.tag}`,
 								iconURL: target.displayAvatarURL({ dynamic: true }),
 							})
 							.setFooter({
@@ -165,11 +165,11 @@ function generateMessage(target, guild) {
 			`
 		)
 		.setAuthor({
-			name: target.user.tag,
+			name: `${target.user.tag}`,
 			iconURL: target.user.displayAvatarURL({ dynamic: true }),
 		})
 		.setFooter({
-			name: guild.name,
+			name: `${guild.name}`,
 			iconURL: guild.iconURL({ dynamic: true }),
 		});
 
