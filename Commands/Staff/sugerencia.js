@@ -228,7 +228,7 @@ module.exports = {
 		} else if (Sub === 'implementar') {
 			try {
 				const implementedEmbed = new EmbedBuilder()
-					.setColor('YELLOW')
+					.setColor('Yellow')
 					.setTitle(data.title)
 					.setAuthor({
 						name: `${data.author.name}`,
