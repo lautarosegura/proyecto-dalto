@@ -16,6 +16,7 @@ global.colorless = '#2F3136';
 
 const { loadEvents } = require('./Handlers/eventHandler.js');
 const { loadCommands } = require('./Handlers/commandHandler.js');
+require('./Handlers/databaseHandler')(client);
 
 client.commands = new Collection();
 
@@ -24,5 +25,6 @@ client
 	.then(() => {
 		loadEvents(client);
 		loadCommands(client);
+		client.dbLogin();
 	})
 	.catch(err => console.log(err));

@@ -10,7 +10,9 @@ function loadEvents(client) {
 			.filter(file => file.endsWith('.js'));
 		for (const file of files) {
 			const event = require(`../Events/${folder}/${file}`);
-			if (event.rest) {
+			if (event.mongo) {
+				continue;
+			} else if (event.rest) {
 				if (event.once) {
 					client.rest.once(event.name, (...args) =>
 						event.execute(...args, client)

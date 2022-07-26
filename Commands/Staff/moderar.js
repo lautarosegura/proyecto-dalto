@@ -11,6 +11,8 @@ const {
 	ComponentType,
 } = require('discord.js');
 
+const WarnsDB = require('../../Systems/Schemas/WarnSchema');
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('moderar')
@@ -57,6 +59,7 @@ module.exports = {
 		let banModal = generateBanModal(target.user.tag);
 		let kickModal = generateKickModal(target.user.tag);
 		let timeoutModal = generateTimeoutModal(target.user.tag);
+		let warnModal = generateWarnModal(target.user.tag);
 
 		const messageToSend = generateMessage(target, guild);
 		const sentMessage = await interaction.reply(messageToSend);
@@ -84,6 +87,8 @@ module.exports = {
 				handleKickModal(i, kickModal, target);
 			} else if (i.customId === 'moderate-timeout') {
 				handleTimeoutModal(i, timeoutModal, target);
+			} else if (i.customId === 'moderate-warn') {
+				handleWarnModal(i, warnModal, target);
 			}
 		});
 
@@ -92,6 +97,7 @@ module.exports = {
 			Actions.components[0].setDisabled(true);
 			Actions.components[1].setDisabled(true);
 			Actions.components[2].setDisabled(true);
+			Actions.components[3]?.setDisabled(true);
 
 			sentMessage.edit({
 				content: `Timed out, ejecuta el comando nuevamente.`,
@@ -187,7 +193,7 @@ function handleKickModal(interaction, kickModal, target) {
 					.addFields([
 						{
 							name: 'Razón:',
-							reason,
+							value: `${reason}`,
 							inline: false,
 						},
 					]),
@@ -196,12 +202,63 @@ function handleKickModal(interaction, kickModal, target) {
 	});
 }
 
+function handleWarnModal(interaction, warnModal, target) {
+	interaction.showModal(warnModal);
+	interaction.awaitModalSubmit({ time: 60000 }).then(res => {
+		let reason =
+			res.fields.getTextInputValue('warn-reason') || 'No especificada.';
+
+		new WarnsDB({
+			userId: target.id,
+			guildId: target.guild.id,
+			moderatorId: interaction.user.id,
+			reason,
+			issueDate: new Date(),
+		}).save();
+
+		res.reply({
+			embeds: [
+				new EmbedBuilder()
+					.setTitle('Nuevo warn')
+					.setAuthor({
+						name: `${target.user.tag}`,
+						iconURL: `${target.user.displayAvatarURL({ dynamic: true })}`,
+					})
+					.setColor('DarkButNotBlack')
+					.setDescription(
+						`${target} (\`${target.user.tag}\`) fue advertido por ${interaction.user.tag}.`
+					)
+					.addFields([
+						{
+							name: 'Razón:',
+							value: `${reason}`,
+							inline: false,
+						},
+					]),
+			],
+		});
+
+		target.user
+			.send({
+				embeds: [
+					new EmbedBuilder()
+						.setColor('DarkButNotBlack')
+						.setDescription(
+							`Recibiste un warn en **${target.guild.name}**. Razón: \`${reason}\``
+						)
+						.setTimestamp(),
+				],
+			})
+			.catch(() => {});
+	});
+}
+
 function handleTimeoutModal(interaction, timeoutModal, target) {
 	interaction.showModal(timeoutModal);
 	i.awaitModalSubmit({ time: 60000 }).then(res => {
-		reason =
+		let reason =
 			res.fields.getTextInputValue('timeout-reason') || 'No especificada.';
-		duration = res.fields.getTextInputValue('timeout-duration');
+		let duration = res.fields.getTextInputValue('timeout-duration');
 
 		const msDuration = ms(duration);
 		if (!msDuration) {
@@ -308,8 +365,38 @@ function generateButtonsRow(target) {
 					.setLabel('Timeout')
 					.setDisabled(true)
 		  );
+	target.moderatable
+		? Actions.addComponents(
+				new ButtonBuilder()
+					.setCustomId('moderate-warn')
+					.setStyle(ButtonStyle.Danger)
+					.setLabel('Advertir')
+		  )
+		: Actions.addComponents(
+				new ButtonBuilder()
+					.setCustomId('moderate-warn')
+					.setStyle(ButtonStyle.Danger)
+					.setLabel('Advertir')
+					.setDisabled(true)
+		  );
 
 	return Actions;
+}
+
+function generateWarnModal(target) {
+	let warnModal = new ModalBuilder()
+		.setTitle(`Warn - ${target}`)
+		.setCustomId('modal-warn');
+
+	const warnReason = new TextInputBuilder()
+		.setCustomId('warn-reason')
+		.setLabel('Introduce una razón.')
+		.setStyle('Paragraph')
+		.setRequired(false);
+
+	warnModal.addComponents(new ActionRowBuilder().addComponents(warnReason));
+
+	return warnModal;
 }
 
 function generateBanModal(target) {
