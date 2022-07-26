@@ -25,7 +25,7 @@ module.exports = {
 	/**
 	 * @param {ChatInputCommandInteraction} interaction
 	 */
-	async execute(interaction, client) {
+	async execute(interaction) {
 		const { options, guild, member } = interaction;
 		const target = options.getMember('miembro');
 		if (member.roles.highest.position < target.roles.highest.position) {
