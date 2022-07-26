@@ -95,7 +95,7 @@ module.exports = {
 			process.env.SUGGESTIONS_UPDATE_CHANNEL
 		);
 
-		const user = await client.users.cache.find(u => u.tag === data.author.name);
+		const user = client.users.cache.find(u => u.tag === data.author.name);
 
 		const row = new ActionRowBuilder();
 		row.addComponents(
@@ -227,7 +227,7 @@ module.exports = {
 			}
 		} else if (Sub === 'implementar') {
 			try {
-				const implementedEmbed = new MessageEmbed()
+				const implementedEmbed = new EmbedBuilder()
 					.setColor('YELLOW')
 					.setTitle(data.title)
 					.setAuthor({
@@ -270,7 +270,7 @@ module.exports = {
 				});
 			} catch (err) {
 				console.log(err);
-				const errEmbed = new MessageEmbed()
+				const errEmbed = new EmbedBuilder()
 					.setColor('Red')
 					.setDescription(
 						`Ocurrió un error al intentar ejecutar este comando. Contacta con un administrador.`
