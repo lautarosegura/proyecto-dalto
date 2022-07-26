@@ -244,7 +244,7 @@ function generateBanModal(target) {
 
 	const banReason = new TextInputBuilder()
 		.setCustomId('ban-reason')
-		.setLabel('¿Por qué estás baneando al usuario? Introduce una razón.')
+		.setLabel('Introduce una razón.')
 		.setStyle('Paragraph')
 		.setRequired(false);
 
@@ -263,7 +263,7 @@ function generateKickModal(target) {
 
 	const kickReason = new TextInputBuilder()
 		.setCustomId('kick-reason')
-		.setLabel('¿Por qué estás expulsando al usuario? Introduce una razón.')
+		.setLabel('Introduce una razón.')
 		.setStyle('Paragraph')
 		.setRequired(false);
 
@@ -286,7 +286,7 @@ function generateTimeoutModal(target) {
 
 	const timeoutReason = new TextInputBuilder()
 		.setCustomId('timeout-reason')
-		.setLabel('¿Por qué estás aislando al usuario? Introduce una razón.')
+		.setLabel('Introduce una razón.')
 		.setStyle('Paragraph')
 		.setRequired(false);
 
