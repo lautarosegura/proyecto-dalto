@@ -8,6 +8,7 @@ const {
 	TextInputBuilder,
 	ChatInputCommandInteraction,
 	PermissionFlagsBits,
+	ComponentType,
 } = require('discord.js');
 
 module.exports = {
@@ -61,13 +62,13 @@ module.exports = {
 		const sentMessage = await interaction.reply(messageToSend);
 
 		const collector = sentMessage.createMessageComponentCollector({
-			componentType: 'BUTTON',
+			componentType: ComponentType.Button,
 			time: 60000,
 		});
 
 		collector.on('collect', i => {
 			if (i.user.id !== interaction.user.id) {
-				return interaction.reply({
+				return i.reply({
 					embeds: [
 						new EmbedBuilder()
 							.setColor('Red')
@@ -78,8 +79,24 @@ module.exports = {
 			}
 
 			if (i.customId === 'moderate-ban') {
-				handleBanModal(interaction, banModal, target);
+				handleBanModal(i, banModal, target);
+			} else if (i.customId === 'moderate-kick') {
+				handleKickModal(i, kickModal, target);
+			} else if (i.customId === 'moderate-timeout') {
+				handleTimeoutModal(i, timeoutModal, target);
 			}
+		});
+
+		collector.on('end', () => {
+			let Actions = generateButtonsRow(target);
+			Actions.components[0].setDisabled(true);
+			Actions.components[1].setDisabled(true);
+			Actions.components[2].setDisabled(true);
+
+			sentMessage.edit({
+				content: `Timed out, ejecuta el comando nuevamente.`,
+				components: [Actions],
+			});
 		});
 	},
 };
@@ -130,10 +147,6 @@ function handleBanModal(interaction, banModal, target) {
 								name: `${target.user.tag}`,
 								iconURL: `${target.displayAvatarURL({ dynamic: true })}`,
 							})
-							// .setFooter({
-							// 	name: `Baneado por ${res.user.tag}`,
-							// 	iconURL: `${res.user.displayAvatarURL({ dynamic: true })}`,
-							// })
 							.setDescription(`${target} (\`${target.user.tag}\`) fue baneado.`)
 							.addFields([
 								{
@@ -148,6 +161,79 @@ function handleBanModal(interaction, banModal, target) {
 	});
 }
 
+function handleKickModal(interaction, kickModal, target) {
+	interaction.showModal(kickModal);
+	interaction.awaitModalSubmit({ time: 60000 }).then(res => {
+		let reason =
+			res.fields.getTextInputValue('kick-reason') || 'Sin especificar.';
+		if (!res.member.permissions.has(PermissionFlagsBits.KickMembers)) {
+			return res.reply({
+				content: `No tenés permisos para expulsar usuarios.`,
+				ephemeral: true,
+			});
+		}
+
+		target.kick(`${reason} - ${interaction.user.tag}`);
+		res.reply({
+			embeds: [
+				new EmbedBuilder()
+					.setTitle('Nuevo kick')
+					.setAuthor({
+						name: `${target.user.tag}`,
+						iconURL: target.displayAvatarURL({ dynamic: true }),
+					})
+					.setColor('DarkButNotBlack')
+					.setDescription(`${target} (\`${target.user.tag}\`) fue expulsado.`)
+					.addFields([
+						{
+							name: 'Razón:',
+							reason,
+							inline: false,
+						},
+					]),
+			],
+		});
+	});
+}
+
+function handleTimeoutModal(interaction, timeoutModal, target) {
+	interaction.showModal(timeoutModal);
+	i.awaitModalSubmit({ time: 60000 }).then(res => {
+		reason =
+			res.fields.getTextInputValue('timeout-reason') || 'No especificada.';
+		duration = res.fields.getTextInputValue('timeout-duration');
+
+		const msDuration = ms(duration);
+		if (!msDuration) {
+			return res.reply({
+				content: `Ingresaste un tiempo inválido. Ejemplo: 1m, 1h, 1d`,
+				ephemeral: true,
+			});
+		}
+
+		target.timeout(msDuration, `${reason} - ${res.user.tag}`);
+		res.reply({
+			embeds: [
+				new EmbedBuilder()
+					.setTitle('Nuevo timeout')
+					.setAuthor({
+						name: `${target.user.tag}`,
+						iconURL: `${target.user.displayAvatarURL({ dynamic: true })}`,
+					})
+					.setColor('DarkButNotBlack')
+					.setDescription(`${target} (\`${target.user.tag}\`) fue aislado.`)
+					.addFields([
+						{
+							name: 'Razón:',
+							reason,
+							inline: false,
+						},
+					]),
+			],
+		});
+	});
+}
+
 function generateMessage(target, guild) {
 	let buttonsRow = generateButtonsRow(target);
 
@@ -158,7 +244,7 @@ function generateMessage(target, guild) {
 			Usuario: ${target} (\`${target.user.tag}\`)
 			ID: \`${target.id}\`
 			Creado: <t:${parseInt(target.user.createdTimestamp / 1000)}:R>
-			¿Baneable?: ${target.bannaable ? 'Sí' : 'No'}
+			¿Baneable?: ${target.bannable ? 'Sí' : 'No'}
 			¿Kickeable?: ${target.kickable ? 'Sí' : 'No'}
 			¿Moderable?: ${target.moderatable ? 'Sí' : 'No'}
 			¿Modificable?: ${target.manageable ? 'Sí' : 'No'}
@@ -168,10 +254,6 @@ function generateMessage(target, guild) {
 			name: `${target.user.tag}`,
 			iconURL: `${target.user.displayAvatarURL({ dynamic: true })}`,
 		});
-	// .setFooter({
-	// 	name: `${guild.name}`,
-	// 	iconURL: `${guild.iconURL({ dynamic: true })}`,
-	// });
 
 	return {
 		embeds: [embed],
