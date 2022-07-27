@@ -45,6 +45,7 @@ client.buttons = new Collection();
 client
 	.login(process.env.TOKEN)
 	.then(() => {
+		client.removeAllListeners();
 		loadEvents(client);
 		loadCommands(client);
 		loadModals(client);
