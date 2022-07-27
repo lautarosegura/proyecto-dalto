@@ -11,7 +11,7 @@ function loadButtons(client) {
 		if (!buttonFile.id) return;
 
 		client.buttons.set(buttonFile.id, buttonFile);
-		table.addRow(buttonFile, '🟩');
+		table.addRow(file, '🟩');
 	}
 
 	return console.log(table.toString(), '\nBotones cargados.');

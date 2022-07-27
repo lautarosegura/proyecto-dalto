@@ -10,7 +10,7 @@ function loadModals(client) {
 		if (!modalFile.id) return;
 
 		client.modals.set(modalFile.id, modalFile);
-		table.addRow(modalFile, '🟩');
+		table.addRow(file, '🟩');
 	}
 
 	return console.log(table.toString(), '\nModales cargados.');
