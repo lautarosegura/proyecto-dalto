@@ -29,6 +29,18 @@ module.exports = {
 			'ce-footer-icon-modal-input'
 		);
 
+		if (
+			secondInput &&
+			!secondInput.match(
+				/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
+			)
+		) {
+			return interaction.reply({
+				content: `¡Debés introducir una URL válida!.`,
+				ephemeral: true,
+			});
+		}
+
 		interaction.reply({
 			content: `¡Footer establecido!`,
 			ephemeral: true,

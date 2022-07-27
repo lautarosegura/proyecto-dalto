@@ -24,9 +24,14 @@ module.exports = {
 		const messageThirdRow = interaction.message.components[2];
 		const input = interaction.fields.getTextInputValue('ce-banner-modal-input');
 
-		if (!input.startsWith('https://')) {
+		if (
+			input &&
+			!input.match(
+				/((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
+			)
+		) {
 			return interaction.reply({
-				content: `¡Debes introducir una URL válida!.`,
+				content: `¡Debés introducir una URL válida!.`,
 				ephemeral: true,
 			});
 		}
