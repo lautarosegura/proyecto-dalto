@@ -126,7 +126,7 @@ module.exports = {
 
 		setTimeout(async function () {
 			await db
-				.deleteOne({ userId: user.id, messageId: message.id })
+				.deleteOne({ userId: member.id, messageId: message.id })
 				.catch(err => {
 					throw err;
 				});
